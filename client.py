@@ -24,26 +24,29 @@ class Client:
 
     def connect(self,port):
         data = ''
+        change = ''
         while True:
             data = self.client_socket.recv(8096)
-            # print chunk
             if ":res:" in data:
                 self.parse_result(data)
                 break
-            # print ":s:" in data and ":e:" in data
             if ":s:" in data and ":e:" in data:
-                # change = raw_input('Change  (y/n) : ')
-                # if 'y' in change:
-                #     self.client_socket.send("x")
-                #     # data = chunk
-                #     continue
-                self.parse(data)
-                response = raw_input('Response : ')
-                self.client_socket.send(response)
-                # data = chunk
-            # else:
-            #     self.client_socket.send("x")
-            #     data += chunk
+                if 'y' in change:
+                    self.parse(data)
+                    response = raw_input('\nResponse : ')
+                    self.client_socket.send(response)
+                    change = ''
+                else:
+                    change = raw_input('\nChange  (y/n) : ')
+                    print
+
+                if 'y' in change:
+                    self.client_socket.send("x")
+                else:
+	                self.parse(data)
+	                response = raw_input('\nResponse : ')
+	                self.client_socket.send(response)
+                
 
 if __name__ == "__main__":
     ip_addr = "127.0.0.1"

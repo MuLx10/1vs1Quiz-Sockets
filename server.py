@@ -1,6 +1,7 @@
 import socket
 import sys
 import thread
+from question import Question
 class Server:
     def __init__(self,host,port):
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -12,6 +13,7 @@ class Server:
         self.MAX_SCORE = 3
         self.ques_n = 3
         self.res = {}
+        # self.data = ''
         print "TCP AServer Waiting for client on port "+str(port)
 
     def socket_handler(self,client_socket,address):
@@ -20,9 +22,13 @@ class Server:
         string = "abcd"
         ans = []
         self.score[address] = 0
-        
-        data = ":s:gfguygvhg:vbh:hgh:bbh:bhb:e:|1"
+        self.ques = Question('questions/question.psv')
+        # data = ":s:gfguygvhg:vbh:hgh:bbh:bhb:e:|1"
         while True:
+
+            data = self.ques.next_question()
+            print data,address
+
             d_ = data.split('|')
 
             client_socket.send(d_[0]) 
@@ -87,7 +93,7 @@ class Server:
                 
         
     def start(self,port):
-
+        
         print "Starting  Server  : "+str(port)
         index = -1
         while 1:
@@ -110,6 +116,7 @@ if __name__ == "__main__":
     if len(sys.argv) > 2:
         ip_addr = sys.argv[1]
         port = int(sys.argv[2])
+
 
     server = Server(ip_addr,port)
     server.start(port)
